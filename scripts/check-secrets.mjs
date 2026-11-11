@@ -25,7 +25,7 @@ for (const file of files) {
     problems.push(`${file}: forbidden file type committed`);
     continue;
   }
-  let size = 0;
+  let size;
   try {
     size = statSync(file).size;
   } catch {

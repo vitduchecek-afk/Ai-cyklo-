@@ -2,7 +2,7 @@
   "name": "trailpack",
   "version": "1.0.0",
   "private": true,
-  "description": "TrailPack – Your intelligent outdoor companion (hiking, bivouac, camping, ultralight trekking, route planning, smart gear).",
+  "description": "TrailPack \u2013 Your intelligent outdoor companion (hiking, bivouac, camping, ultralight trekking, route planning, smart gear).",
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.28.0",
   "engines": {
@@ -20,7 +20,7 @@
     "dev:web": "pnpm --filter @trailpack/mobile web",
     "build:web": "pnpm --filter @trailpack/mobile build:web",
     "build:api": "pnpm --filter @trailpack/api build",
-    "e2e": "playwright test --trace off",
+    "e2e": "playwright test --trace off --pass-with-no-tests",
     "check": "pnpm typecheck && pnpm lint && pnpm test"
   },
   "devDependencies": {

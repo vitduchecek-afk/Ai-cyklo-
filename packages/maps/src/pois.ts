@@ -7,7 +7,7 @@
  */
 import type { BBox, Campsite, CampsiteType, Confidence, DataSource, KeyValueCache, LegalStatus, Position, Potability, ProtectedAreaInfo, WaterSource, WaterSourceType } from '@trailpack/shared';
 import { ENDPOINTS, HttpClient, TrailPackError, cacheKey, cached } from '@trailpack/shared';
-import { bboxOf, haversine, nearestPointOnLine, simplifyLine, cumulativeDistances } from '@trailpack/calculations';
+import { haversine, nearestPointOnLine, simplifyLine, cumulativeDistances } from '@trailpack/calculations';
 import type { ProtectedAreaKind } from '@trailpack/shared';
 
 // ---------------------------------------------------------------------------
@@ -644,4 +644,3 @@ export function alongRoute<T extends { lat: number; lon: number }>(items: readon
     .sort((a, b) => a.alongRouteM - b.alongRouteM || a.distanceFromRouteM - b.distanceFromRouteM);
 }
 
-export { bboxOf };

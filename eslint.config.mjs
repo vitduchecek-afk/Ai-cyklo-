@@ -44,7 +44,7 @@ export default tseslint.config(
   },
   {
     files: ['**/test/**/*.ts', 'tests/**/*.ts'],
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off', 'no-console': 'off' },
+    rules: { '@typescript-eslint/no-non-null-assertion': 'off', '@typescript-eslint/no-explicit-any': 'off', 'no-console': 'off' },
   },
   {
     files: ['**/*.mjs', 'scripts/**/*.js', 'apps/*/scripts/**'],

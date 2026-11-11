@@ -63,7 +63,7 @@ export function setLanguage(lang: Language): void {
 }
 
 /** Non-hook translate (toasts, dialogs triggered outside React). */
-export const translate: TFn = (key, vars) => i18next.t(key, vars) as string;
+export const translate: TFn = (key, vars) => String(i18next.t(key as string, (vars ?? {}) as Record<string, unknown>));
 
 /** Typed translation hook. */
 export function useT(): { t: TFn; language: Language; locale: string } {

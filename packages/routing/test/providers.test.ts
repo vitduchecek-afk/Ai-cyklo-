@@ -112,13 +112,13 @@ describe('BRouter', () => {
 
 describe('Valhalla', () => {
   it('builds pedestrian and bicycle requests', () => {
-    const ped = buildValhallaRequest({ ...baseReq, activity: 'ridge_traverse', preference: 'least_ascent', alternatives: 1, avoid: [{ lat: 50, lon: 15, radiusM: 100 }] }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const ped = buildValhallaRequest({ ...baseReq, activity: 'ridge_traverse', preference: 'least_ascent', alternatives: 1, avoid: [{ lat: 50, lon: 15, radiusM: 100 }] }) as any;  
     expect(ped.costing).toBe('pedestrian');
     expect(ped.costing_options.pedestrian).toMatchObject({ max_hiking_difficulty: 4, use_hills: 0 });
     expect(ped.alternates).toBe(1);
     expect(ped.elevation_interval).toBe(30);
     expect(ped.exclude_polygons[0]).toHaveLength(17);
-    const bike = buildValhallaRequest({ ...baseReq, activity: 'mtb', preference: 'fastest', surface: 'trail' }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const bike = buildValhallaRequest({ ...baseReq, activity: 'mtb', preference: 'fastest', surface: 'trail' }) as any;  
     expect(bike.costing).toBe('bicycle');
     expect(bike.costing_options.bicycle).toMatchObject({ bicycle_type: 'Mountain', use_roads: 0 });
   });

@@ -7,7 +7,7 @@
  * - OpenTopoMap, EOX, Waymarked Trails, Mapy.com: online only – bulk downloading is not permitted
  *   (`offlineAllowed: false`).
  */
-import type { BBox, KeyValueCache, Position, RouteWaypoint, TrackPoint, WaterSource, Campsite } from '@trailpack/shared';
+import type { KeyValueCache, Position, RouteWaypoint, TrackPoint, WaterSource, Campsite } from '@trailpack/shared';
 import { ENDPOINTS, HttpClient, TrailPackError, cached } from '@trailpack/shared';
 import { lineLength } from '@trailpack/calculations';
 
@@ -436,4 +436,3 @@ export function trackFeatureCollection(points: readonly TrackPoint[]): FeatureCo
   return { type: 'FeatureCollection', features };
 }
 
-export type { BBox };

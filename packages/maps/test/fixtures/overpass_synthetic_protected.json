@@ -1,0 +1,15 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API (SYNTHETIC test fixture in the real response shape; overpass-api.de was not reachable from the build sandbox)",
+  "osm3s": { "timestamp_osm_base": "2026-11-11T09:00:00Z" },
+  "elements": [
+    { "type": "relation", "id": 11, "center": { "lat": 50.73, "lon": 15.68 }, "timestamp": "2025-01-01T00:00:00Z", "tags": { "boundary": "protected_area", "protect_class": "5", "name": "Chráněná krajinná oblast Šumava", "designation": "Chráněná krajinná oblast", "type": "boundary" } },
+    { "type": "relation", "id": 12, "center": { "lat": 50.73, "lon": 15.68 }, "timestamp": "2025-01-01T00:00:00Z", "tags": { "boundary": "national_park", "protect_class": "2", "name": "Krkonošský národní park", "name:cs": "Krkonošský národní park", "designation": "Národní park", "type": "boundary" } },
+    { "type": "relation", "id": 13, "center": { "lat": 50.73, "lon": 15.68 }, "tags": { "boundary": "protected_area", "protect_class": "1b", "name": "Černý důl", "protection_title": "Národní přírodní rezervace", "type": "boundary" } },
+    { "type": "relation", "id": 14, "center": { "lat": 50.74, "lon": 15.74 }, "tags": { "boundary": "national_park", "name": "Karkonoski Park Narodowy", "designation": "Park Narodowy", "type": "boundary" } },
+    { "type": "way", "id": 15, "center": { "lat": 50.74, "lon": 15.74 }, "tags": { "leisure": "nature_reserve", "name": "Mokřad u rybníka", "protection_title": "Přírodní rezervace" } },
+    { "type": "relation", "id": 16, "center": { "lat": 50.74, "lon": 15.74 }, "tags": { "boundary": "protected_area", "protect_class": "97", "name": "Krkonoše", "designation": "Natura 2000 – ptačí oblast" } },
+    { "type": "relation", "id": 17, "center": { "lat": 50.74, "lon": 15.74 }, "tags": { "boundary": "protected_area", "protect_class": "3", "name": "Skalní věž", "protection_title": "Přírodní památka" } },
+    { "type": "relation", "id": 18, "center": { "lat": 50.74, "lon": 15.74 }, "tags": { "boundary": "administrative", "name": "Okres Trutnov" } }
+  ]
+}

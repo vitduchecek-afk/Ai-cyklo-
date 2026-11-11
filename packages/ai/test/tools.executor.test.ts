@@ -121,7 +121,7 @@ describe('tool executor', () => {
     expect(food.content).toMatchObject({ estimated: true });
     expect((await ex.execute(call('geocodeLocation', { query: '49.5, 18.4' }))).content).toMatchObject({ parsedCoordinates: true });
     expect((await ex.execute(call('geocodeLocation', {}))).isError).toBe(true);
-    expect((await ex.execute(call('getCurrentTrip', {}))).content).toMatchObject({ trip: null });
+    expect((await ex.execute(call('getCurrentTrip', {}))).content).toMatchObject({ hasTrip: false });
   });
 
   it('planExpedition asks for the region when missing and plans when present', async () => {

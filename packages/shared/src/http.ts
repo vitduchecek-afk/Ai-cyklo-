@@ -108,7 +108,7 @@ export class HttpClient {
       throw new TrailPackError('offline', 'Device is offline', { provider });
     }
     let attempt = 0;
-    // eslint-disable-next-line no-constant-condition
+     
     while (true) {
       const started = Date.now();
       const controller = new AbortController();

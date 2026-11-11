@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { HttpClient } from '@trailpack/shared';
 import type { FetchLike } from '@trailpack/shared';
 
-export const fixture = <T = any>(name: string): T => // eslint-disable-line @typescript-eslint/no-explicit-any
+export const fixture = <T = any>(name: string): T =>  
   JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8')) as T;
 
 export const fixtureText = (name: string): string => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
@@ -11,7 +11,7 @@ export interface RecordedCall {
   url: string;
   method: string;
   headers: Record<string, string>;
-  body?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  body?: any;  
 }
 
 export type Handler = (call: RecordedCall) => Response | Promise<Response> | undefined;

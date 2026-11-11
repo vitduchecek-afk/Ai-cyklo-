@@ -657,7 +657,7 @@ const getCurrentTrip = defineTool({
   describe: () => 'Načtení aktuální výpravy',
   async run(_a, ports) {
     const trip = await ports.getCurrentTrip();
-    return trip ? { trip } : { trip: null, message: 'Žádná výprava není právě otevřená.' };
+    return trip ? { hasTrip: true, trip } : { hasTrip: false, message: 'Žádná výprava není právě otevřená.' };
   },
 });
 
