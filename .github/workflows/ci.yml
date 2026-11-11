@@ -1,0 +1,166 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.28.0'
+
+jobs:
+  check:
+    name: Typecheck · Lint · Unit & integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Unit + integration tests (with coverage)
+        run: pnpm test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
+
+  web:
+    name: Web build + E2E (Playwright)
+    runs-on: ubuntu-latest
+    needs: check
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build web app
+        run: pnpm build:web
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: pnpm e2e
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trailpack-web
+          path: apps/mobile/dist/
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+
+  api:
+    name: API server build
+    runs-on: ubuntu-latest
+    needs: check
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:api
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trailpack-api
+          path: apps/api/dist/
+
+  android:
+    name: Android APK (release build)
+    runs-on: ubuntu-latest
+    needs: check
+    timeout-minutes: 60
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - run: pnpm install --frozen-lockfile
+      - name: Expo prebuild (Android)
+        working-directory: apps/mobile
+        run: npx expo prebuild --platform android --no-install --clean
+      - name: Decode release keystore (optional)
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+      - name: Gradle assembleRelease + bundleRelease
+        working-directory: apps/mobile/android
+        env:
+          TRAILPACK_UPLOAD_STORE_FILE: ${{ env.HAS_KEYSTORE == 'true' && format('{0}/upload.keystore', runner.temp) || '' }}
+          TRAILPACK_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          TRAILPACK_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          TRAILPACK_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon assembleRelease bundleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trailpack-android
+          path: |
+            apps/mobile/android/app/build/outputs/apk/release/*.apk
+            apps/mobile/android/app/build/outputs/bundle/release/*.aab
+
+  security:
+    name: Dependency & secret checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Audit production dependencies (high+)
+        run: pnpm audit --prod --audit-level high
+        continue-on-error: true
+      - name: Scan for committed secrets
+        run: node scripts/check-secrets.mjs
