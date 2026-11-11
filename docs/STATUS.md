@@ -33,8 +33,8 @@ Legenda: ✅ hotovo a otestováno · 🟡 implementováno, neověřeno na reáln
 
 | Oblast | Stav |
 |---|---|
-| Hono server: auth zařízení, AI proxy s limity a rozpočtem, sync push/pull, sdílení výprav s rolemi, GDPR export/smazání, rate limiting | ✅ (testy přes `app.request`) |
-| PostgreSQL úložiště | 🟡 implementováno, testy běží nad SQLite |
+| Hono server: health/meta, anonymní registrace zařízení, AI proxy s povolenými modely, rozpočtem a rate limitingem | ✅ 5 testů + spuštěný build ověřen |
+| Endpointy synchronizace a sdílení výprav, GDPR export/smazání, perzistentní úložiště (SQLite/PostgreSQL) | ❌ (tokeny a využití zatím v paměti) |
 | Nasazení | ❌ nenasazeno (Dockerfile připraven) |
 
 ## Mobilní / webová aplikace (`apps/mobile`)
@@ -53,7 +53,7 @@ Legenda: ✅ hotovo a otestováno · 🟡 implementováno, neověřeno na reáln
 
 | Položka | Stav |
 |---|---|
-| Unit + integrační testy | ✅ 640 / 640 (33 souborů) |
+| Unit + integrační testy | ✅ 645 / 645 (34 souborů) |
 | TypeScript strict (všech 15 workspace) | ✅ |
 | ESLint | ✅ 0 chyb, 0 varování |
 | E2E (Playwright) | ❌ konfigurace připravena, testy nenapsány |
