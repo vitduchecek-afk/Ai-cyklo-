@@ -43,10 +43,15 @@ Legenda: ✅ hotovo a otestováno · 🟡 implementováno, neověřeno na reáln
 |---|---|
 | Design system (světlý, tmavý, venkovní kontrastní režim), UI kit (~35 komponent), ikony, grafy (výškový profil, koláč, sloupce, trend, kalendář) | ✅ kód, 🟡 vizuálně ověřena jen domovská obrazovka |
 | i18n cs / en / sk / pl / de | ✅ |
-| Navigace (5 záložek), domovská obrazovka (offline výpočet slunce) | ✅ web build + screenshot |
-| Mapa (MapLibre native/web), plánovač tras, výškový profil propojený s mapou | ❌ komponenta mapy nedokončena |
-| Obrazovky Výpravy, Výbava, AI chat, Počasí, Statistiky, Nastavení, Bezpečnost, Kalkulačky, Offline mapy, Diagnostika | ❌ zobrazují poctivé „připravuje se“ |
-| Datová vrstva aplikace (napojení DB driverů, služeb, `ToolPorts`, GPS služba, offline mapy, notifikace, hlas) | ❌ |
+| Navigace (5 záložek + Nastavení), domovská obrazovka (offline výpočet slunce) | ✅ web ověřen v prohlížeči |
+| Lokální databáze (web: sql.js + IndexedDB, native: expo-sqlite) a React Query hooky | ✅ web: uložení výbavy přežije obnovení stránky; 🟡 native neověřeno |
+| Mapa (MapLibre web/native, OpenFreeMap, trasa, dlouhý stisk → souřadnice + kopírování) | ✅ web vykresluje dlaždice; 🟡 native neověřeno; ❌ POI, měření, přetahování bodů, poloha uživatele |
+| Výpravy: nová výprava (vyhledání míst Photon → trasa BRouter → etapy), detail s mapou, výškovým profilem, etapami, předpovědí (≤ 16 dní), odhadem vody a exportem GPX | 🟡 implementováno, celý tok neprošel automatickým testem |
+| Výbava: evidence, mazání s undo, hmotnost base/worn/consumable, třída, koláčový graf | ✅ web (smoke test) |
+| AI: offline rozbor zadání → předvyplnění výpravy; chat s vlastním klíčem (bez nástrojů) | 🟡 bez klíče neověřen chat |
+| Nastavení: téma, jazyk, poskytovatel AI, model, klíč (native SecureStore, web jen v paměti) | 🟡 nastavení se zatím neukládají mezi spuštěními |
+| Počasí, statistiky, bezpečnost/SOS, kalkulačky, offline mapy, diagnostika, GPS záznam, sestavy výbavy, jídlo, rozpočet, deník, skupiny, notifikace, hlas, AI agent s nástroji v UI | ❌ (doménová logika hotová v balíčcích, UI chybí) |
+| Texty obrazovek přes i18n (en/sk/pl/de) | ❌ nové obrazovky mají zatím pevné české texty |
 | Webový build (`expo export`) | ✅ |
 
 ## Testy a build
