@@ -43,7 +43,11 @@ describe('HttpSyncTransport', () => {
       baseUrl: 'https://x',
       getToken: () => 't',
       timeoutMs: 20,
-      fetch: ((_u: string, init: RequestInit) => new Promise((_r, rej) => init.signal!.addEventListener('abort', () => rej(init.signal!.reason)))) as unknown as typeof fetch,
+      fetch: ((_u: string, init: RequestInit) =>
+        new Promise((_r, rej) => {
+          if (init.signal!.aborted) rej(init.signal!.reason);
+          init.signal!.addEventListener('abort', () => rej(init.signal!.reason));
+        })) as unknown as typeof fetch,
     });
     await expect(hang.pull({ cursor: '0' })).rejects.toMatchObject({ code: 'timeout' });
     const ctrl = new AbortController();
