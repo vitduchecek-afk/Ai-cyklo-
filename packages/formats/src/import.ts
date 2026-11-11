@@ -55,8 +55,8 @@ export function detectFormat(content: string, filename?: string): RouteFileForma
   const head = stripBom(content).slice(0, 4096).trimStart();
   if (head.startsWith('{') || head.startsWith('[')) return 'geojson';
   if (head.startsWith('<')) {
-    if (/<(?:\w+:)?gpx[\s>]/i.test(head)) return 'gpx';
-    if (/<(?:\w+:)?kml[\s>]/i.test(head)) return 'kml';
+    if (/<(?:\w+:)?gpx[\s>/]/i.test(head)) return 'gpx';
+    if (/<(?:\w+:)?kml[\s>/]/i.test(head)) return 'kml';
   }
   const ext = filename?.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1];
   if (ext === 'gpx') return 'gpx';
@@ -65,8 +65,8 @@ export function detectFormat(content: string, filename?: string): RouteFileForma
   // The root element may come after a long XML prolog / comments.
   if (head.startsWith('<')) {
     const rest = stripBom(content);
-    if (/<(?:\w+:)?gpx[\s>]/i.test(rest)) return 'gpx';
-    if (/<(?:\w+:)?kml[\s>]/i.test(rest)) return 'kml';
+    if (/<(?:\w+:)?gpx[\s>/]/i.test(rest)) return 'gpx';
+    if (/<(?:\w+:)?kml[\s>/]/i.test(rest)) return 'kml';
   }
   return null;
 }

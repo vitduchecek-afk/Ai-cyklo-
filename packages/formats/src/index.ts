@@ -1,4 +1,4 @@
-export * from './xml';
+export { DEFAULT_MAX_BYTES } from './xml';
 export * from './gpx';
 export * from './kml';
 export * from './geojson';

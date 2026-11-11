@@ -169,7 +169,7 @@ export function exportGeoJson(input: GeoJsonExportInput, pretty = false): string
   for (const l of input.lines ?? []) {
     const coordinates = l.positions.map((p) => {
       if (!isValidLatLon(p[1], p[0])) throw new TrailPackError('invalid_input', `Neplatné souřadnice pro export GeoJSON: ${p[1]}, ${p[0]}.`);
-      return p.length > 2 ? [r7(p[0]), r7(p[1]), Math.round(p[2] * 10) / 10] : [r7(p[0]), r7(p[1])];
+      return p.length > 2 ? [r7(p[0]), r7(p[1]), Math.round((p[2] as number) * 10) / 10] : [r7(p[0]), r7(p[1])];
     });
     features.push({
       type: 'Feature',
