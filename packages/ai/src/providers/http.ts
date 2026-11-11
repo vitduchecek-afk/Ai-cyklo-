@@ -61,7 +61,7 @@ export interface ProviderCall {
   /** Converts an HTTP error response into a `TrailPackError` (set `retryable` to allow retries). */
   mapError: (failure: HttpFailure) => TrailPackError;
   /** Secret values (API keys, tokens) that must never appear in errors. */
-  secrets?: string[];
+  secrets?: (string | undefined)[];
 }
 
 export const DEFAULT_CHAT_TIMEOUT_MS = 600_000;

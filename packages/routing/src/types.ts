@@ -76,6 +76,8 @@ export interface RoutingProvider {
   /** Human readable name (Czech/neutral). */
   readonly name: string;
   readonly requiresKey: boolean;
+  /** True when the provider computes round trips itself (otherwise `RoutingService.loop` builds one from circle waypoints). */
+  readonly nativeLoop?: boolean;
   /** Whether the provider can route this activity (and has its key, if needed it still reports true; `route` then throws `not_configured`). */
   supports(activity: ActivityType): boolean;
   /**
