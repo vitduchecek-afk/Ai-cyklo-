@@ -1,0 +1,40 @@
+{
+  "name": "trailpack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TrailPack – Your intelligent outdoor companion (hiking, bivouac, camping, ultralight trekking, route planning, smart gear).",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r --parallel --if-present typecheck",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "TRAILPACK_LIVE_TESTS=1 vitest run --project live",
+    "dev:api": "pnpm --filter @trailpack/api dev",
+    "dev:mobile": "pnpm --filter @trailpack/mobile start",
+    "dev:web": "pnpm --filter @trailpack/mobile web",
+    "build:web": "pnpm --filter @trailpack/mobile build:web",
+    "build:api": "pnpm --filter @trailpack/api build",
+    "e2e": "playwright test --trace off",
+    "check": "pnpm typecheck && pnpm lint && pnpm test"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "@types/node": "^22.15.0",
+    "eslint": "^10.1.0",
+    "@eslint/js": "^10.0.1",
+    "typescript-eslint": "^8.72.2",
+    "globals": "^17.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "@playwright/test": "1.63.0",
+    "prettier": "^3.8.1"
+  },
+  "type": "module"
+}

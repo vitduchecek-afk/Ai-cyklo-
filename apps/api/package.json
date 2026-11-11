@@ -1,0 +1,27 @@
+{
+  "name": "@trailpack/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "node --experimental-strip-types --watch src/server.ts",
+    "start": "node dist/server.js",
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.13.17",
+    "@hono/node-server": "^2.1.6",
+    "zod": "^4.6.7",
+    "pg": "^8.23.1",
+    "@trailpack/shared": "workspace:*",
+    "@trailpack/ai": "workspace:*",
+    "@trailpack/sync": "workspace:*",
+    "@trailpack/database": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "esbuild": "^0.28.2"
+  }
+}
