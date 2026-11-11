@@ -1,4 +1,5 @@
 export * from './models';
+export * from './regions';
 export * from './errors';
 export * from './http';
 export * from './cache';

@@ -45,7 +45,8 @@ export interface ChatMessage {
   parts: ChatPart[];
   /**
    * Provider-native content for assistant turns that must be replayed
-   * verbatim (e.g. Anthropic thinking blocks). Only replayed to the same provider+model.
+   * verbatim (e.g. Anthropic thinking blocks, Gemini thought signatures).
+   * Only replayed to the same provider+model.
    */
   providerRaw?: { provider: AiProviderId; model: string; content: unknown };
 }
@@ -100,4 +101,19 @@ export interface ChatTransport {
 export interface ProviderCredentials {
   apiKey?: string;
   baseUrl?: string;
+}
+
+/**
+ * Executes model tool calls against real application services. Implemented
+ * by `createToolExecutor` (src/tools); consumed by the agent loop (src/agent).
+ */
+export interface ToolExecutor {
+  definitions(): ToolDefinition[];
+  /** Tool changes user data (create/update trip …). */
+  isMutating(name: string): boolean;
+  /** Whether this particular call needs explicit user confirmation before running. */
+  needsConfirmation(call: ToolCallPart): boolean;
+  /** Human readable (Czech) one-line description of the call for confirmation dialogs. */
+  describeCall(call: ToolCallPart): string;
+  execute(call: ToolCallPart, signal?: AbortSignal): Promise<{ content: unknown; isError?: boolean }>;
 }
