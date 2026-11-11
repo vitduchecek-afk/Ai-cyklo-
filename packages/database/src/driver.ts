@@ -116,34 +116,25 @@ export abstract class SyncSqlDriver implements SqlDriver {
 
   /** Driver handed to transaction callbacks: runs directly on the locked connection. */
   private createTxDriver(): SqlDriver {
-    const self = this;
     const tx: SqlDriver = {
-      async exec(sql) {
-        self.rawExec(sql);
-      },
-      async run(sql, params) {
-        return self.rawRun(sql, normalizeParams(params));
-      },
-      async all<T>(sql: string, params?: readonly SqlValue[]) {
-        return self.rawAll(sql, normalizeParams(params)) as unknown as T[];
-      },
-      async get<T>(sql: string, params?: readonly SqlValue[]) {
-        return (self.rawAll(sql, normalizeParams(params)) as unknown as T[])[0];
-      },
-      async transaction<T>(fn: (t: SqlDriver) => Promise<T>) {
-        const name = `sp_${++self.savepointCounter}`;
-        self.rawExec(`SAVEPOINT ${name}`);
+      exec: async (sql) => this.rawExec(sql),
+      run: async (sql, params) => this.rawRun(sql, normalizeParams(params)),
+      all: async <T>(sql: string, params?: readonly SqlValue[]) => this.rawAll(sql, normalizeParams(params)) as unknown as T[],
+      get: async <T>(sql: string, params?: readonly SqlValue[]) => (this.rawAll(sql, normalizeParams(params)) as unknown as T[])[0],
+      transaction: async <T>(fn: (t: SqlDriver) => Promise<T>) => {
+        const name = `sp_${++this.savepointCounter}`;
+        this.rawExec(`SAVEPOINT ${name}`);
         try {
           const r = await fn(tx);
-          self.rawExec(`RELEASE ${name}`);
+          this.rawExec(`RELEASE ${name}`);
           return r;
         } catch (e) {
-          self.rawExec(`ROLLBACK TO ${name}`);
-          self.rawExec(`RELEASE ${name}`);
+          this.rawExec(`ROLLBACK TO ${name}`);
+          this.rawExec(`RELEASE ${name}`);
           throw e;
         }
       },
-      async close() {
+      close: async () => {
         throw new Error('Cannot close the database inside a transaction');
       },
     };

@@ -122,7 +122,7 @@ export class ResponseCache {
     return {
       chat: async (request, signal) => {
         const cached = await this.get(request);
-        if (cached) return cached;
+        if (cached) return { ...cached, usage: { inputTokens: 0, outputTokens: 0, costUsd: 0 } }; // a hit costs nothing
         const response = await transport.chat(request, signal);
         if (response.stopReason === 'end' && !response.message.parts.some((p) => p.type === 'tool_call')) await this.set(request, response);
         return response;

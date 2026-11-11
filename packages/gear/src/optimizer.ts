@@ -190,6 +190,13 @@ const DAY_TRIPS: readonly ActivityType[] = ['day_hike', 'road_cycling', 'gravel'
 /** Categories where holding more than one piece is normal. */
 const MULTI_OK = new Set(['clothing', 'food', 'water', 'footwear']);
 
+const FAMILIES: ReadonlyArray<readonly string[]> = [
+  ['tents', 'tarps', 'hammocks'],
+  ['sleeping_bags', 'quilts'],
+];
+/** Same category, or both in an interchangeable family (tent ↔ tarp ↔ hammock, bag ↔ quilt). */
+const sameFamily = (a: string, b: string): boolean => a === b || FAMILIES.some((f) => f.includes(a) && f.includes(b));
+
 const fmtG = (g: number): string => `${Math.round(g)} g`;
 
 function isEstimatedItem(item: GearItem): boolean {
@@ -380,7 +387,7 @@ export function optimizeLoadout(input: OptimizerInput): OptimizerResult {
     } else if (role === 'sleep_pad') {
       safetyNote = 'Ověřte R-hodnotu karimatky pro očekávanou teplotu.';
     }
-    if (!reject && isProtectedRole(role) && cand.categoryKey !== item.categoryKey) reject = 'Náhrada bezpečnostní výbavy musí být ve stejné kategorii.';
+    if (!reject && isProtectedRole(role) && !sameFamily(cand.categoryKey, item.categoryKey)) reject = 'Náhrada bezpečnostní výbavy musí být ve stejné kategorii.';
     if (!reject && isProtectedRole(role) && !safetyNote) safetyNote = 'Ověřte, že náhrada plní stejnou funkci.';
     if (reject) {
       blocked.push({ itemName: item.name, reason: `Náhrada „${cand.name}“ zamítnuta: ${reject}` });

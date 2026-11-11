@@ -45,7 +45,7 @@ export interface ListOptions {
 }
 
 /** Input for `insert`: base fields are optional and filled in. */
-export type EntityDraft<T extends EntityBase> = Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> & Partial<EntityBase>;
+export type EntityDraft<I> = Omit<I, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> & Partial<EntityBase>;
 
 export interface WriteOptions {
   /** The write originates from the sync engine: keep timestamps, skip the outbox. */
@@ -64,21 +64,25 @@ export function escapeLike(text: string): string {
   return text.replace(/[\\%_]/g, (c) => `\\${c}`);
 }
 
-export class EntityRepository<T extends EntityBase> {
+/**
+ * @typeParam T validated entity type (schema output)
+ * @typeParam I accepted draft input type (schema input – fields with defaults are optional)
+ */
+export class EntityRepository<T extends EntityBase, I = T> {
   private readonly indexed: readonly IndexedColumn[];
 
   constructor(
     protected readonly driver: SqlDriver,
     readonly table: SyncedEntity,
-    readonly schema: z.ZodType<T>,
+    readonly schema: z.ZodType<T, I>,
     protected readonly ctx: RepositoryContext,
   ) {
     this.indexed = INDEXED_COLUMNS[table];
   }
 
   /** Same repository bound to another driver (e.g. a transaction handle). */
-  bind(driver: SqlDriver): EntityRepository<T> {
-    return new EntityRepository<T>(driver, this.table, this.schema, this.ctx);
+  bind(driver: SqlDriver): EntityRepository<T, I> {
+    return new EntityRepository<T, I>(driver, this.table, this.schema, this.ctx);
   }
 
   // ---- reads -------------------------------------------------------------
@@ -114,7 +118,7 @@ export class EntityRepository<T extends EntityBase> {
   // ---- writes ------------------------------------------------------------
 
   /** Insert a new entity; missing base fields are generated. Fails when the id exists. */
-  async insert(input: EntityDraft<T> | T): Promise<T> {
+  async insert(input: EntityDraft<I> | T): Promise<T> {
     const now = this.ctx.now();
     const candidate = {
       ...input,

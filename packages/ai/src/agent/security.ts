@@ -25,7 +25,7 @@ function cut(s: string, max: number): string {
 export function wrapExternal(source: string, text: string, maxChars = 8000): string {
   const safeSource = source.replace(/[^\p{L}\p{N}_.:/-]+/gu, '_').slice(0, 64) || 'unknown';
   let body = text.replace(/<\s*(\/?)\s*external_data/gi, '‹$1external_data');
-  body = body.replace(/\u0000/g, '');
+  body = body.replaceAll(String.fromCharCode(0), '');
   if (body.length > maxChars) body = cut(body, maxChars) + TRUNCATION_MARK;
   return `<external_data source="${safeSource}">\n${body}\n</external_data>`;
 }
@@ -44,7 +44,7 @@ const INJECTION_PATTERNS: ReadonlyArray<readonly [string, RegExp]> = [
   ['developer_mode', /\b(developer|debug|god|jailbreak|dan)\s+mode\b/i],
   ['new_instructions', /\bnew\s+instructions?\s*:/i],
   ['fake_tag', /<\s*\/?\s*(system|assistant|instructions?|tool_call|tool_result)\s*>/i],
-  ['cs_ignore', /\b(zapome[nň]|ignoruj|ignorujte|p[řr]ehlédni|opome[nň])\b[^.\n]{0,40}\b(p[řr]edchoz[íi]\w*|v[šs]echn\w*|dosavadn[íi]\w*)\b[^.\n]{0,30}\b(instrukc\w*|pokyn\w*|pravidl\w*|zad[áa]n[íi])/i],
+  ['cs_ignore', /\b(zapome[nň]|ignoruj|ignorujte|p[řr]ehlédni|opome[nň])\b[^.\n]{0,40}\b(p[řr]edchoz[íi]\w*|v[šs]echn\w*|dosavadn[íi]\w*)[^.\n]{0,30}\b(instrukc\w*|pokyn\w*|pravidl\w*|zad[áa]n[íi])/i],
   ['cs_role', /\b(nyn[íi]\s+jsi|od\s+te[ďd]\s+jsi|chovej\s+se\s+jako)\b/i],
   ['cs_system_prompt', /\bsyst[ée]mov\w+\s+(prompt|zpr[áa]v\w*|instrukc\w*|pokyn\w*)/i],
   ['tool_abuse', /\b(call|invoke|run|execute|zavolej|spus[ťt])\b[^.\n]{0,30}\b(delete|remove|smaž|sma[zž]|vymaž)\w*\b[^.\n]{0,30}\b(trip|tool|n[áa]stroj|v[šs]echn\w*)/i],
@@ -84,7 +84,7 @@ export function sanitizeToolResult(value: unknown, maxChars = 12_000): string {
       json = '"[neserializovatelný výsledek]"';
     }
   }
-  json = json.replace(/\u0000/g, '');
+  json = json.replaceAll(String.fromCharCode(0), '');
   if (json.length <= maxChars) return json;
   return `${cut(json, Math.max(0, maxChars))}${TRUNCATION_MARK} (původně ${json.length} znaků)`;
 }

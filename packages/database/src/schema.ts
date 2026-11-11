@@ -80,7 +80,7 @@ export const INDEXED_COLUMNS: Record<SyncedEntity, readonly IndexedColumn[]> = {
 };
 
 /** Zod schema used to validate each synced entity. */
-export const ENTITY_SCHEMAS: { [K in SyncedEntity]: z.ZodType<EntityBase> } = {
+export const ENTITY_SCHEMAS = {
   trips: TripSchema,
   trip_days: TripDaySchema,
   routes: RouteSchema,
@@ -108,4 +108,4 @@ export const ENTITY_SCHEMAS: { [K in SyncedEntity]: z.ZodType<EntityBase> } = {
   ai_messages: AIMessageSchema,
   offline_regions: OfflineRegionSchema,
   user_profile: UserProfileSchema,
-};
+} as const satisfies { [K in SyncedEntity]: z.ZodType<EntityBase> };

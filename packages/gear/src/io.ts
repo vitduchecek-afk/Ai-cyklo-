@@ -209,7 +209,7 @@ const HEADER_ALIASES: Record<Field, readonly string[]> = {
 
 /** Normalize a header: diacritics-free, punctuation → space; also returns a unit hint "(g)". */
 function normHeader(h: string): { key: string; unitHint?: string } {
-  const n = normalizeText(h.replace(/^﻿/, ''));
+  const n = normalizeText(h.replace(/^\uFEFF/, ''));
   const m = /\((g|kg|oz|lb|lbs)\)/.exec(n);
   const key = n.replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
   return { key, unitHint: m?.[1] };
@@ -287,7 +287,7 @@ export function parseGearCsv(input: string): GearCsvParseResult {
   const empty = (message: string): GearCsvParseResult => ({ items: [], loadoutEntries: [], errors: [{ line: 0, message }], format: 'trailpack', delimiter: ',' });
   const invalid = validateImportText(input);
   if (invalid) return empty(invalid);
-  const text = input.replace(/^﻿/, '');
+  const text = input.replace(/^\uFEFF/, '');
   if (text.trim() === '') return empty('Soubor je prázdný.');
   const delimiter = detectDelimiter(text);
   const rows = parseCsvRows(text, delimiter);
@@ -486,7 +486,7 @@ export function exportGearCsv(items: ReadonlyArray<GearItem | GearItemDraft>): s
     ];
     lines.push(cells.map(csvEscape).join(';'));
   }
-  return `﻿${lines.join('\r\n')}\r\n`;
+  return `\uFEFF${lines.join('\r\n')}\r\n`;
 }
 
 // ---------------------------------------------------------------------------
@@ -519,7 +519,7 @@ export function parseGearJson(input: string): GearJsonParseResult {
   if (invalid) return fail(invalid);
   let data: unknown;
   try {
-    data = JSON.parse(input.replace(/^﻿/, ''));
+    data = JSON.parse(input.replace(/^\uFEFF/, ''));
   } catch {
     return fail('Neplatný JSON – soubor nelze přečíst.');
   }

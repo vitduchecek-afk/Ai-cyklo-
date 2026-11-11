@@ -156,7 +156,7 @@ export function tripToRouteResult(trip: z.infer<typeof TripSchema>, profile: str
       runs.push({ fromIdx: m.begin_shape_index + offset, toIdx: m.end_shape_index + offset, wayType: m.travel_type });
     }
   }
-  const segments = buildSegments(geometry, mergeRuns(runs.filter((r) => r.toIdx > r.fromIdx)));
+  const segments = buildSegments(geometry, runs.filter((r) => r.toIdx > r.fromIdx));
   const hasEle = allEle;
   const stats = hasEle ? elevationStats(geometry, 3) : { ascentM: 0, descentM: 0 };
   const warnings: string[] = [];
