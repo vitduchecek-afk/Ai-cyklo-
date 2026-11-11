@@ -40,7 +40,7 @@ export interface ParsedTripRequest {
   confidence: number;
 }
 
-const strip = (s: string): string => s.normalize('NFD').replace(/\p{M}/g, '').toLowerCase();
+const strip = (s: string): string => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 
 const NUM_WORDS: Record<string, number> = {
   jeden: 1, jedna: 1, jednu: 1, one: 1,
@@ -94,7 +94,7 @@ interface SleepRule {
   re: RegExp;
 }
 const SLEEP_RULES: SleepRule[] = [
-  { type: 'hammock', re: /hamak|hammock/ },
+  { type: 'hammock', re: /hamak\w*|hamac\w*|hammock/ },
   { type: 'tarp', re: /\btarp\w*|plachtou|pod plachtu/ },
   { type: 'open_air', re: /spat venku|spani venku|pod sirou oblohou|open[- ]air|cowboy camp|bez stanu/ },
   { type: 'bivy_bag', re: /\bbivak\w*|\bbivy\b|\bbivouac\b/ },
