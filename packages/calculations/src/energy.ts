@@ -105,7 +105,7 @@ export function estimateEnergyExpenditure(input: EnergyInput): EnergyResult {
   return {
     activityKcal: r(activityKcal),
     restingKcal: r(restingKcal),
-    totalKcal: r(activityKcal + restingKcal),
+    totalKcal: r(activityKcal) + r(restingKcal),
     method: 'Pandolf (1977) + Santee (2001) downhill correction',
     assumptions,
   };
@@ -157,7 +157,7 @@ export function cyclingEnergy(input: CyclingEnergyInput): EnergyResult {
   return {
     activityKcal: r(activityKcal),
     restingKcal: r(restingKcal),
-    totalKcal: r(activityKcal + restingKcal),
+    totalKcal: r(activityKcal) + r(restingKcal),
     method: 'MET (Compendium of Physical Activities) + mechanická práce stoupání',
     assumptions,
   };
